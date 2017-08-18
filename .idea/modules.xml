@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WJPermission.iml" filepath="$PROJECT_DIR$/WJPermission.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wjpermission.iml" filepath="$PROJECT_DIR$/wjpermission.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wjpermission-annotations/wjpermission-annotations.iml" filepath="$PROJECT_DIR$/wjpermission-annotations/wjpermission-annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wjpermission-compiler/wjpermission-compiler.iml" filepath="$PROJECT_DIR$/wjpermission-compiler/wjpermission-compiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/wypermission-annotations/wypermission-annotations.iml" filepath="$PROJECT_DIR$/wypermission-annotations/wypermission-annotations.iml" />
     </modules>
   </component>
