@@ -1,1 +1,1 @@
-include ':app', ':wjpermission-annotations', ':wjpermission-compiler'
+include ':app', ':wjpermission-annotations', ':wjpermission-compiler', ':wjpermission-api'

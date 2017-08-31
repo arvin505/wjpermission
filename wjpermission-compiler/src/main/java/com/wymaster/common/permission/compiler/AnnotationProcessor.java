@@ -7,6 +7,8 @@ import com.wymaster.common.permission.annotations.PermissionsGranted;
 import com.wymaster.common.permission.annotations.PermissionsRationale;
 import com.wymaster.common.permission.annotations.PermissionsRequestSync;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -25,6 +27,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 
 /**
  * Created by arvin on 2017/8/18.
@@ -66,7 +69,28 @@ public class AnnotationProcessor extends AbstractProcessor {
         if (!isAnnotatedWithMethod(roundEnvironment, PermissionsGranted.class)) return false;
         if (!isAnnotatedWithMethod(roundEnvironment, PermissionsDenied.class)) return false;
         if (!isAnnotatedWithMethod(roundEnvironment, PermissionsRationale.class)) return false;
-        if (!isAnnotatedWithMethod(roundEnvironment, PermissionsCustomRationale.class)) return false;
+        if (!isAnnotatedWithMethod(roundEnvironment, PermissionsCustomRationale.class))
+            return false;
+
+        Writer writer = null;
+        for (ProxyInfo info : map.values()) {
+            try {
+                JavaFileObject file = mFiler.createSourceFile(info.getProxyName(), info.getTypeElement());
+                writer = file.openWriter();
+                writer.write(info.generateJavaCode());
+                writer.flush();
+            } catch (Exception e) {
+                error(info.getTypeElement(), e.getMessage());
+            } finally {
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -95,7 +119,6 @@ public class AnnotationProcessor extends AbstractProcessor {
                 error(element, "%s not support.", element);
             }
         }
-
         return true;
     }
 
@@ -114,13 +137,35 @@ public class AnnotationProcessor extends AbstractProcessor {
             }
             Annotation anno = method.getAnnotation(clazz);
             if (anno instanceof PermissionsGranted) {
-
+                int[] value = ((PermissionsGranted) anno).value();
+                if (value.length > 1) {
+                    info.grantedMap.put(methodName, value);
+                } else {
+                    info.singleGrantmap.put(value[0], methodName);
+                }
             } else if (anno instanceof PermissionsDenied) {
-
+                int[] value = ((PermissionsDenied) anno).value();
+                if (value.length > 1) {
+                    info.deniedMap.put(methodName, value);
+                } else {
+                    info.singleDeniedMap.put(value[0], methodName);
+                }
             } else if (anno instanceof PermissionsRationale) {
-
+                int[] value = ((PermissionsRationale) anno).value();
+                if (value.length > 1) {
+                    info.rationaleMap.put(methodName, value);
+                } else {
+                    info.singleRationaleMap.put(value[0], methodName);
+                }
             } else if (anno instanceof PermissionsCustomRationale) {
-
+                int[] value = ((PermissionsCustomRationale) anno).value();
+                if (value.length > 1) {
+                    info.customRationaleMap.put(methodName, value);
+                } else {
+                    info.singleCustomRationaleMap.put(value[0], methodName);
+                }
+            } else {
+                error(element, "%s not support", method);
             }
         }
         return true;
@@ -135,7 +180,7 @@ public class AnnotationProcessor extends AbstractProcessor {
         if (args.length > 0) {
             message = String.format(message, args);
         }
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message);
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
     }
 
 }

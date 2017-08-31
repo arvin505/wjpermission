@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Created by xiaoyi on 2017/8/18.
- * 自定义权限二次申请回调
+ *
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 同步权限申请回调
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 public @interface PermissionsRequestSync {
     int[] value();
     String[] permission();

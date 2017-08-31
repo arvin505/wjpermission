@@ -9,7 +9,7 @@ import javax.xml.bind.ValidationEvent;
 
 /**
  * Created by xiaoyi on 2017/8/18.
- * 权限通过的回调
+ *
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
